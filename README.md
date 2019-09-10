@@ -102,3 +102,7 @@ Extends `Error` to indicate that the action being performed is not authorized.
 ### `ConflictError`
 
 Extends `Error` to indicate the action cannot be completed due to the existence of a conflicting entity.
+
+### `ValidationError`
+
+Extends `Error` to indicate the action cannot be completed due to a validation error.

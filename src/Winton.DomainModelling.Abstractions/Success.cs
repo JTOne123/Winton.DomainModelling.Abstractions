@@ -37,14 +37,14 @@ namespace Winton.DomainModelling
         "StyleCop.CSharp.MaintainabilityRules",
         "SA1402:FileMayOnlyContainASingleType",
         Justification = "Generic and non-generic version of the same class.")]
-    public sealed class Success<TData> : Result<TData>
+    public sealed class Success<T> : Result<T>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Success{TData}" /> class.
+        ///     Initializes a new instance of the <see cref="Success{T}" /> class.
         /// </summary>
         /// <param name="data">The data encapsulated by the result.</param>
-        /// <returns>A new instance of <see cref="Success{TData}" />.</returns>
-        public Success(TData data)
+        /// <returns>A new instance of <see cref="Success{T}" />.</returns>
+        public Success(T data)
         {
             Data = data;
         }
@@ -52,119 +52,119 @@ namespace Winton.DomainModelling
         /// <summary>
         ///     Gets the data.
         /// </summary>
-        public TData Data { get; }
+        public T Data { get; }
 
         /// <inheritdoc />
-        public override Result<TData> Catch(Func<Error, Result<TData>> onFailure)
+        public override Result<T> Catch(Func<Error, Result<T>> onFailure)
         {
-            return new Success<TData>(Data);
+            return new Success<T>(Data);
         }
 
         /// <inheritdoc />
-        public override Task<Result<TData>> Catch(Func<Error, Task<Result<TData>>> onFailure)
+        public override Task<Result<T>> Catch(Func<Error, Task<Result<T>>> onFailure)
         {
-            return Task.FromResult<Result<TData>>(new Success<TData>(Data));
+            return Task.FromResult<Result<T>>(new Success<T>(Data));
         }
 
         /// <inheritdoc />
-        public override Result<TNewData> Combine<TOtherData, TNewData>(
-            Result<TOtherData> other,
-            Func<TData, TOtherData, TNewData> combineData,
+        public override Result<TCombined> Combine<TOther, TCombined>(
+            Result<TOther> other,
+            Func<T, TOther, TCombined> combineData,
             Func<Error, Error, Error> combineErrors)
         {
-            return other.Match<Result<TNewData>>(
-                otherData => new Success<TNewData>(combineData(Data, otherData)),
-                otherError => new Failure<TNewData>(otherError));
+            return other.Match<Result<TCombined>>(
+                otherData => new Success<TCombined>(combineData(Data, otherData)),
+                otherError => new Failure<TCombined>(otherError));
         }
 
         /// <inheritdoc />
-        public override T Match<T>(Func<TData, T> onSuccess, Func<Error, T> onFailure)
+        public override TOut Match<TOut>(Func<T, TOut> onSuccess, Func<Error, TOut> onFailure)
         {
             return onSuccess(Data);
         }
 
         /// <inheritdoc />
-        public override Result<TData> OnFailure(Action onFailure)
+        public override Result<T> OnFailure(Action onFailure)
         {
             return this;
         }
 
         /// <inheritdoc />
-        public override Result<TData> OnFailure(Action<Error> onFailure)
+        public override Result<T> OnFailure(Action<Error> onFailure)
         {
             return this;
         }
 
         /// <inheritdoc />
-        public override Task<Result<TData>> OnFailure(Func<Task> onFailure)
+        public override Task<Result<T>> OnFailure(Func<Task> onFailure)
         {
-            return Task.FromResult<Result<TData>>(this);
+            return Task.FromResult<Result<T>>(this);
         }
 
         /// <inheritdoc />
-        public override Task<Result<TData>> OnFailure(Func<Error, Task> onFailure)
+        public override Task<Result<T>> OnFailure(Func<Error, Task> onFailure)
         {
-            return Task.FromResult<Result<TData>>(this);
+            return Task.FromResult<Result<T>>(this);
         }
 
         /// <inheritdoc />
-        public override Result<TData> OnSuccess(Action onSuccess)
+        public override Result<T> OnSuccess(Action onSuccess)
         {
             return OnSuccess(_ => onSuccess());
         }
 
         /// <inheritdoc />
-        public override Result<TData> OnSuccess(Action<TData> onSuccess)
+        public override Result<T> OnSuccess(Action<T> onSuccess)
         {
             onSuccess(Data);
             return this;
         }
 
         /// <inheritdoc />
-        public override async Task<Result<TData>> OnSuccess(Func<Task> onSuccess)
+        public override async Task<Result<T>> OnSuccess(Func<Task> onSuccess)
         {
             return await OnSuccess(_ => onSuccess());
         }
 
         /// <inheritdoc />
-        public override async Task<Result<TData>> OnSuccess(Func<TData, Task> onSuccess)
+        public override async Task<Result<T>> OnSuccess(Func<T, Task> onSuccess)
         {
             await onSuccess(Data);
             return this;
         }
 
         /// <inheritdoc />
-        public override Result<TNewData> Select<TNewData>(Func<TData, TNewData> selector)
+        public override Result<TOut> Select<TOut>(Func<T, TOut> selector)
         {
-            return new Success<TNewData>(selector(Data));
+            return new Success<TOut>(selector(Data));
         }
 
         /// <inheritdoc />
-        public override async Task<Result<TNewData>> Select<TNewData>(Func<TData, Task<TNewData>> selector)
+        public override async Task<Result<TOut>> Select<TOut>(Func<T, Task<TOut>> selector)
         {
-            return new Success<TNewData>(await selector(Data));
+            return new Success<TOut>(await selector(Data));
         }
 
         /// <inheritdoc />
-        public override Result<TData> SelectError(Func<Error, Error> selector)
+        public override Result<T> SelectError(Func<Error, Error> selector)
         {
-            return new Success<TData>(Data);
+            return new Success<T>(Data);
         }
 
         /// <inheritdoc />
-        public override Task<Result<TData>> SelectError(Func<Error, Task<Error>> selector)
+        public override Task<Result<T>> SelectError(Func<Error, Task<Error>> selector)
         {
-            return Task.FromResult<Result<TData>>(new Success<TData>(Data));
+            return Task.FromResult<Result<T>>(new Success<T>(Data));
         }
 
         /// <inheritdoc />
-        public override Result<TNextData> Then<TNextData>(Func<TData, Result<TNextData>> onSuccess)
+        public override Result<TOut> Then<TOut>(Func<T, Result<TOut>> onSuccess)
         {
             return onSuccess(Data);
         }
 
         /// <inheritdoc />
-        public override Task<Result<TNextData>> Then<TNextData>(Func<TData, Task<Result<TNextData>>> onSuccess)
+        public override Task<Result<TOut>> Then<TOut>(Func<T, Task<Result<TOut>>> onSuccess)
         {
             return onSuccess(Data);
         }
