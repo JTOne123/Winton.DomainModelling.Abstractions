@@ -16,7 +16,7 @@ namespace Winton.DomainModelling
         ///     Initializes a new instance of the <see cref="Valid{T}" /> class.
         /// </summary>
         /// <param name="data">The data encapsulated by the result.</param>
-        /// <returns>A new instance of <see cref="Success{T}" />.</returns>
+        /// <returns>A new instance of <see cref="Valid{T}" />.</returns>
         public Valid(T data)
         {
             Data = data;

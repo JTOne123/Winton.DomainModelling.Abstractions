@@ -34,7 +34,7 @@ namespace Winton.DomainModelling
         {
             return other.Match<Validation<TCombined>>(
                 otherData => new Invalid<TCombined>(Error),
-                otherError => new Invalid<TCombined>(Error.Append(otherError)));
+                otherError => new Invalid<TCombined>(Error.Add(otherError)));
         }
 
         /// <inheritdoc />
