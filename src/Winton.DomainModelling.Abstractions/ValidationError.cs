@@ -90,12 +90,12 @@ namespace Winton.DomainModelling
         /// </summary>
         /// <param name="other">The other validation error to append.</param>
         /// <returns>This error with the others appended.</returns>
-        public ValidationError Add(ValidationError other)
+        public ValidationError Append(ValidationError other)
         {
             return _errors
                 .Concat(other._errors)
                 .GroupBy(error => error.Key, error => error.Value)
-                .ToDictionary(group => group.Key, group => group.SelectMany(x => x));
+                .ToDictionary(group => group.Key, group => group.SelectMany(x => x).Distinct());
         }
 
         /// <inheritdoc />

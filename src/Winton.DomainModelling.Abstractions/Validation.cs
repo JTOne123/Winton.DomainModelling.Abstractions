@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
-using System.Threading.Tasks;
 
 namespace Winton.DomainModelling
 {
@@ -65,42 +64,6 @@ namespace Winton.DomainModelling
         ///     A value that is mapped from either the data or the error.
         /// </returns>
         public abstract TOut Match<TOut>(Func<T, TOut> onValid, Func<ValidationError, TOut> onInvalid);
-
-        /// <summary>
-        ///     Projects valid data from one type to another.
-        /// </summary>
-        /// <remarks>
-        ///     If this is invalid then this is a no-op.
-        /// </remarks>
-        /// <typeparam name="TOut">
-        ///     The type of projected data.
-        /// </typeparam>
-        /// <param name="selector">
-        ///     The function that is invoked to select the data.
-        /// </param>
-        /// <returns>
-        ///     A new validation containing either; the output of the <paramref>selector</paramref> function
-        ///     if this is valid, otherwise the original validation error.
-        /// </returns>
-        public abstract Validation<TOut> Select<TOut>(Func<T, TOut> selector);
-
-        /// <summary>
-        ///     Projects valid data from one type to another.
-        /// </summary>
-        /// <remarks>
-        ///     If this is invalid then this is a no-op.
-        /// </remarks>
-        /// <typeparam name="TOut">
-        ///     The type of projected data.
-        /// </typeparam>
-        /// <param name="selector">
-        ///     The asynchronous function that is invoked to select the data.
-        /// </param>
-        /// <returns>
-        ///     A new validation containing either; the output of the <paramref>selector</paramref> function
-        ///     if this is valid, otherwise the original validation error.
-        /// </returns>
-        public abstract Task<Validation<TOut>> Select<TOut>(Func<T, Task<TOut>> selector);
 
         /// <summary>
         ///     Converts this <see cref="Validation{T}" /> into a <see cref="Result{T}" />.

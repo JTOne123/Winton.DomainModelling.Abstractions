@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
-using System.Threading.Tasks;
 
 namespace Winton.DomainModelling
 {
@@ -34,25 +33,13 @@ namespace Winton.DomainModelling
         {
             return other.Match<Validation<TCombined>>(
                 otherData => new Invalid<TCombined>(Error),
-                otherError => new Invalid<TCombined>(Error.Add(otherError)));
+                otherError => new Invalid<TCombined>(Error.Append(otherError)));
         }
 
         /// <inheritdoc />
         public override TOut Match<TOut>(Func<T, TOut> onValid, Func<ValidationError, TOut> onInvalid)
         {
             return onInvalid(Error);
-        }
-
-        /// <inheritdoc />
-        public override Validation<TOut> Select<TOut>(Func<T, TOut> selector)
-        {
-            return new Invalid<TOut>(Error);
-        }
-
-        /// <inheritdoc />
-        public override Task<Validation<TOut>> Select<TOut>(Func<T, Task<TOut>> selector)
-        {
-            return Task.FromResult<Validation<TOut>>(new Invalid<TOut>(Error));
         }
 
         /// <inheritdoc />
