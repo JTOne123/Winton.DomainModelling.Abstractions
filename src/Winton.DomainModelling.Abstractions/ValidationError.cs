@@ -119,7 +119,6 @@ namespace Winton.DomainModelling
         /// <returns>The new <see cref="Dictionary{TKey,TValue}"/>.</returns>
         public Dictionary<string, TValue> ToDictionary<TValue>(Func<IEnumerable<string>, TValue> elementSelector)
         {
-            // TODO: Ensure this creates a deep copy
             return _errors.ToDictionary(e => e.Key, e => elementSelector(e.Value));
         }
 
