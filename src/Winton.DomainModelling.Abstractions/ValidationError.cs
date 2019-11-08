@@ -63,6 +63,17 @@ namespace Winton.DomainModelling
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ValidationError" /> class from a
+        ///     single error message.
+        /// </summary>
+        /// <param name="value">The error message.</param>
+        /// <returns>A new instance of <see cref="ValidationError" />.</returns>
+        public ValidationError(string value)
+            : this(string.Empty, value)
+        {
+        }
+
         /// <inheritdoc />
         public int Count => _errors.Count;
 
@@ -110,13 +121,35 @@ namespace Winton.DomainModelling
             return _errors.GetEnumerator();
         }
 
+#pragma warning disable 1591
+#pragma warning disable SA1600 // Elements should be documented
+        public ValidationError Nest(string key)
+        {
+            string Key(KeyValuePair<string, IEnumerable<string>> pair)
+            {
+                return string.IsNullOrWhiteSpace(pair.Key) ? key : $"{key}.{pair.Key}";
+            }
+
+            return new ValidationError(
+                this
+                    .Select(pair => new KeyValuePair<string, IEnumerable<string>>(Key(pair), pair.Value))
+                    .ToDictionary(pair => pair.Key, pair => pair.Value));
+        }
+
+        public ValidationError Nest(string key, int index)
+        {
+            return Nest($"{key}[{index}]");
+        }
+#pragma warning restore SA1600 // Elements should be documented
+#pragma warning restore 1591
+
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey,TValue}"/> from the errors contained in this class,
-        ///     using the specified <paramref name="elementSelector"/> to create the values.
+        ///     Creates a <see cref="Dictionary{TKey,TValue}" /> from the errors contained in this class,
+        ///     using the specified <paramref name="elementSelector" /> to create the values.
         /// </summary>
         /// <param name="elementSelector">The selector used to create the values.</param>
         /// <typeparam name="TValue">The type of value to be created.</typeparam>
-        /// <returns>The new <see cref="Dictionary{TKey,TValue}"/>.</returns>
+        /// <returns>The new <see cref="Dictionary{TKey,TValue}" />.</returns>
         public Dictionary<string, TValue> ToDictionary<TValue>(Func<IEnumerable<string>, TValue> elementSelector)
         {
             return _errors.ToDictionary(e => e.Key, e => elementSelector(e.Value));

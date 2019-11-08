@@ -2,6 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+#pragma warning disable 1591
 
 namespace Winton.DomainModelling
 {
@@ -11,8 +14,8 @@ namespace Winton.DomainModelling
     public static class ValidationExtensions
     {
         /// <summary>
-        ///     Takes a func that is encapsulated in a <see cref="Validation{T}"/> and partially applies
-        ///     the data that is encapsulated in a <see cref="Validation{T}"/> to the first argument of the func.
+        ///     Takes a func that is encapsulated in a <see cref="Validation{T}" /> and partially applies
+        ///     the data that is encapsulated in a <see cref="Validation{T}" /> to the first argument of the func.
         /// </summary>
         /// <remarks>
         ///     If the validations are valid then the func is invoked with the data, otherwise any errors are combined.
@@ -36,7 +39,7 @@ namespace Winton.DomainModelling
 
         /// <summary>
         ///     Takes a func and partially applies the data that is encapsulated in a
-        ///     <see cref="Validation{T}"/> to the first argument of the func.
+        ///     <see cref="Validation{T}" /> to the first argument of the func.
         /// </summary>
         /// <remarks>
         ///     If the validation is valid then the func is invoked with the data, otherwise the original error is returned.
@@ -60,7 +63,7 @@ namespace Winton.DomainModelling
 
         /// <summary>
         ///     Takes a func and partially applies the data that is encapsulated in a
-        ///     <see cref="Validation{T}"/> to the first argument of the func.
+        ///     <see cref="Validation{T}" /> to the first argument of the func.
         /// </summary>
         /// <remarks>
         ///     If the validation is valid then the func is invoked with the data, otherwise the original error is returned.
@@ -84,11 +87,12 @@ namespace Winton.DomainModelling
         }
 
         /// <summary>
-        ///     Takes a func that is encapsulated in a <see cref="Validation{T}"/> and partially applies
-        ///     the data that is encapsulated in a <see cref="Validation{T}"/> to the first argument of the func.
+        ///     Takes a func that is encapsulated in a <see cref="Validation{T}" /> and partially applies
+        ///     the data that is encapsulated in a <see cref="Validation{T}" /> to the first argument of the func.
         /// </summary>
         /// <remarks>
-        ///     If the validation is valid then the func is invoked with the data, otherwise the original error is returned.
+        ///     If either the <paramref name="func" /> or the <paramref name="validation" /> are <see cref="Invalid{T}" />
+        ///     then a new <see cref="Invalid{T}" /> is created containing the combined errors.
         /// </remarks>
         /// <param name="func">The func to invoke with valid data.</param>
         /// <param name="validation">
@@ -107,5 +111,24 @@ namespace Winton.DomainModelling
         {
             return func.Append<TIn1, Func<TIn2, TOut>>(validation, (f, x1) => x2 => f(x1, x2));
         }
+
+#pragma warning disable SA1600 // Elements should be documented
+        public static Validation<T> Nest<T>(this Validation<T> validation, string key)
+        {
+            return validation.Match(_ => validation, error => new Invalid<T>(error.Nest(key)));
+        }
+
+        public static IEnumerable<Validation<T>> Nest<T>(this IEnumerable<Validation<T>> validations, string key)
+        {
+            return validations.Select((v, i) => v.Match(_ => v, error => new Invalid<T>(error.Nest(key, i))));
+        }
+
+        public static Validation<IEnumerable<T>> ValidateAll<T>(this IEnumerable<Validation<T>> validations)
+        {
+            return validations.Aggregate(
+                new Valid<IEnumerable<T>>(Enumerable.Empty<T>()) as Validation<IEnumerable<T>>,
+                (a, b) => a.Append(b, (x, y) => x.Append(y)));
+        }
+#pragma warning restore SA1600 // Elements should be documented
     }
 }

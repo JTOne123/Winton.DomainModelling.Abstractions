@@ -17,7 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/wintoncode/Winton.DomainModelling.Abstractions</RepositoryUrl>
     <RootNamespace>Winton.DomainModelling</RootNamespace>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
     <Title>Winton Domain Modelling Abstractions</Title>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>

@@ -8,11 +8,11 @@ using System.Linq;
 namespace Winton.DomainModelling
 {
     /// <summary>
-    ///     This class is a kind of builder for <see cref="Validation{T}"/>.
+    ///     This class is a kind of builder for <see cref="Validation{T}" />.
     ///     It exposes a fluent API that allows clients to define a set of
     ///     expectations for some data.
     ///     If all of the expectations are met then it will create an instance
-    ///     of <see cref="Valid{T}"/>; otherwise it will return <see cref="Invalid{T}"/>
+    ///     of <see cref="Valid{T}" />; otherwise it will return <see cref="Invalid{T}" />
     ///     containing the error messages for each expectation that failed.
     /// </summary>
     /// <typeparam name="T">The type of data to be validated.</typeparam>
@@ -50,10 +50,10 @@ namespace Winton.DomainModelling
 
         /// <summary>
         ///     Runs all of the expectations.
-        ///     If any fail then it will create an <see cref="Invalid{T}"/> instance containing
-        ///     the errors for each failed expectation; otherwise it will create a <see cref="Valid{T}"/>.
+        ///     If any fail then it will create an <see cref="Invalid{T}" /> instance containing
+        ///     the errors for each failed expectation; otherwise it will create a <see cref="Valid{T}" />.
         /// </summary>
-        /// <returns>The <see cref="Invalid{T}"/> if any expectations fail; otherwise <see cref="Valid{T}"/>.</returns>
+        /// <returns>The <see cref="Invalid{T}" /> if any expectations fail; otherwise <see cref="Valid{T}" />.</returns>
         public Validation<T> Validate()
         {
             Dictionary<string, IEnumerable<string>> errors = _expectations
@@ -72,9 +72,9 @@ namespace Winton.DomainModelling
                 Message = message;
             }
 
-            public string Message { get; }
-
             public string Key { get; }
+
+            public string Message { get; }
 
             public Predicate<T> Predicate { get; }
         }

@@ -26,8 +26,8 @@ namespace Winton.DomainModelling
 
         /// <summary>
         ///     Appends another validation onto this one.
-        ///     If both are valid then <paramref>combine</paramref> is invoked;
-        ///     else if either is invalid then the errors are appended.
+        ///     If both are valid then <paramref name="combine"/> is invoked;
+        ///     else the errors are appended.
         /// </summary>
         /// <typeparam name="TOther">
         ///     The type of data in the other validation.
